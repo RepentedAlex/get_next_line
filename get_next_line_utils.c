@@ -6,7 +6,7 @@
 /*   By: apetitco <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 14:54:35 by apetitco          #+#    #+#             */
-/*   Updated: 2023/12/05 19:10:10 by apetitco         ###   ########.fr       */
+/*   Updated: 2023/12/11 15:24:41 by apetitco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,11 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	int		j;
 
 	i = 0;
+	if (!s1 || !s2)
+		return (NULL);
 	cat_len = ft_strlen(s1) + ft_strlen(s2);
-	cat_str = malloc((cat_len + 1) * sizeof(char));
-	if (!cat_len || !s1 || !s2)
+	cat_str = malloc((ft_strlen(s1) + ft_strlen(s2) + 1) * sizeof(char));
+	if (!cat_str)
 		return (NULL);
 	while (s1[i] != 0)
 	{

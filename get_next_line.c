@@ -6,7 +6,7 @@
 /*   By: apetitco <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 14:54:26 by apetitco          #+#    #+#             */
-/*   Updated: 2023/12/05 19:04:17 by apetitco         ###   ########.fr       */
+/*   Updated: 2023/12/11 15:57:55 by apetitco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,7 @@ char	*get_next_line(int fd)
 	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
 		return (NULL);
 	buffer = read_file(fd, buffer);
-	if (!buffer)
+	if (buffer == 0)
 		return (NULL);
 	line = ft_line(buffer);
 	buffer = ft_next(buffer);
@@ -115,10 +115,10 @@ int	main(void)
 {
 	int fd = open("./test", O_RDONLY);
 	char	*str;
-	for (int i = 0 ; i < 14 ; i++)
+	for (int i = 0 ; i < 15 ; i++)
 	{
 		str = get_next_line(fd);
-		printf("%s\n", str);
+		printf("%s", str);
 	}
 }
 */
