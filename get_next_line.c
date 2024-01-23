@@ -3,122 +3,148 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: apetitco <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: apetitco <apetitco@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/29 14:54:26 by apetitco          #+#    #+#             */
-/*   Updated: 2023/12/11 15:57:55 by apetitco         ###   ########.fr       */
+/*   Created: 2024/01/23 15:02:06 by apetitco          #+#    #+#             */
+/*   Updated: 2024/01/23 18:15:04 by apetitco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-char	*ft_free(char *buffer, char *buf)
+char	*obtain_remaining(char *basin_buffer)
 {
-	char	*temp;
+	char	*remaining;
+	char	*start;
+	int		i;
+	int		len;
 
-	temp = ft_strjoin(buffer, buf);
-	free(buffer);
-	return (temp);
+	if (!basin_buffer)
+		return (NULL);
+	if (basin_buffer[ft_strlen(basin_buffer) - 1] == '\n')
+		return (NULL);
+	start = ft_strchr(basin_buffer, '\n');
+	start++;
+	len = 0;
+	while (start[len])
+		len++;
+	remaining = ft_calloc(len, sizeof(char));
+	if (!remaining)
+		return (NULL);
+	i = 0;
+	while (i <= len)
+	{
+		remaining[i] = start[i];
+		i++;
+	}
+	remaining[i] = 0;
+	return (remaining);
 }
 
-char	*ft_next(char *buffer)
+char	*extract_line(char *basin_buffer)
 {
-	int		i;
-	int		j;
 	char	*line;
+	size_t	len;
+	size_t	i;
 
-	i = 0;
-	while (buffer[i] && buffer[i] != '\n')
-		i++;
-	if (!buffer[i])
-	{
-		free(buffer);
+	if (!basin_buffer || basin_buffer[0] == 0)
 		return (NULL);
+	len = 0;
+	while (basin_buffer[len] && basin_buffer[len] != '\n')
+		len++;
+	line = ft_calloc(len + 2, sizeof(char));
+	if (!line)
+		return (NULL);
+	i = 0;
+	while (i <= len)
+	{
+		line[i] = basin_buffer[i];
+		i++;
 	}
-	line = ft_calloc((ft_strlen(buffer) - i + 1), sizeof(char));
-	i++;
-	j = 0;
-	while (buffer[i])
-		line[j++] = buffer[i++];
-	free(buffer);
+	line[i] = 0;
 	return (line);
 }
 
-char	*ft_line(char *buffer)
+char	*append_buffer(char *basin_buffer, char *cup_buffer)
 {
-	char	*line;
-	int		i;
+	char	*tmp;
 
-	i = 0;
-	if (!buffer[i])
-		return (NULL);
-	while (buffer[i] && buffer[i] != '\n')
-		i++;
-	line = ft_calloc(i + 2, sizeof(char));
-	i = 0;
-	while (buffer[i] && buffer[i] != '\n')
-	{
-		line[i] = buffer[i];
-		i++;
-	}
-	if (buffer[i] && buffer[i] == '\n')
-		line[i++] = '\n';
-	return (line);
+	tmp = ft_strjoin(basin_buffer, cup_buffer);
+	free(basin_buffer);
+	return (tmp);
 }
 
-char	*read_file(int fd, char *res)
+static char	*read_from_file(char *basin_buffer, int fd)
 {
-	char	*buffer;
-	int		byte_read;
+	int			bytes_read;
+	char		*cup_buffer;
 
-	if (!res)
-		res = ft_calloc(1, 1);
-	buffer = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
-	byte_read = 1;
-	while (byte_read > 0)
+	cup_buffer = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
+	if (!cup_buffer)
+		return (NULL);
+	bytes_read = 1;
+	while (bytes_read > 0)
 	{
-		byte_read = read(fd, buffer, BUFFER_SIZE);
-		if (byte_read == -1)
-		{
-			free(buffer);
-			return (NULL);
-		}
-		buffer[byte_read] = 0;
-		res = ft_free(res, buffer);
-		if (ft_strchr(buffer, '\n'))
-			break;
+		bytes_read = read(fd, cup_buffer, BUFFER_SIZE);
+		if (bytes_read == -1)
+			return (free(cup_buffer), NULL);
+		if (bytes_read == 0)
+			return (free(cup_buffer), NULL);
+		cup_buffer[bytes_read] = 0;
+		basin_buffer = append_buffer(basin_buffer, cup_buffer);
+		if (ft_strchr(basin_buffer, '\n'))
+			break ;
 	}
-	free(buffer);
-	return (res);
+	free(cup_buffer);
+	return (basin_buffer);
 }
 
 char	*get_next_line(int fd)
 {
-	static char	*buffer;
+	char		*tmp;
+	static char	*basin_buffer = NULL;
 	char		*line;
 
-	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
+	if (fd < 0 || read(fd, NULL, 0) < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	buffer = read_file(fd, buffer);
-	if (buffer == 0)
-		return (NULL);
-	line = ft_line(buffer);
-	buffer = ft_next(buffer);
+	if (!ft_strchr(basin_buffer, '\n'))
+		basin_buffer = read_from_file(basin_buffer, fd);
+	if (!basin_buffer)
+		return (free(basin_buffer), NULL);
+	line = extract_line(basin_buffer);
+	tmp = obtain_remaining(basin_buffer);
+	free(basin_buffer);
+	basin_buffer = ft_strdup(tmp);
+	free(tmp);
 	return (line);
 }
 
-/*
-#include <stdio.h>
-#include <fcntl.h>
+// #include <stdio.h>
+// #include <fcntl.h>
 
-int	main(void)
-{
-	int fd = open("./test", O_RDONLY);
-	char	*str;
-	for (int i = 0 ; i < 15 ; i++)
-	{
-		str = get_next_line(fd);
-		printf("%s", str);
-	}
-}
-*/
+// int	main(int argc, char **argv)
+// {
+// 	int		fd;
+// 	char	*line;
+// 	int		count;
+
+// 	count = 0;
+// 	fd = open(argv[1], O_RDONLY);
+// 	if (fd == -1)
+// 	{
+// 		printf("Error opening file");
+// 		return (1);
+// 	}
+// 	while (count < atoi(argv[2]))
+// 	{
+// 		line = get_next_line(fd);
+// 		count++;
+// 		printf("[%d]:%s\n", count, line);
+// 		free(line);
+// 		line = NULL;
+// 	}
+
+// 	close(fd);
+// 	return (0);
+// }
+
