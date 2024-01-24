@@ -119,32 +119,32 @@ char	*get_next_line(int fd)
 	return (line);
 }
 
-// #include <stdio.h>
-// #include <fcntl.h>
+#include <stdio.h>
+#include <fcntl.h>
 
-// int	main(int argc, char **argv)
-// {
-// 	int		fd;
-// 	char	*line;
-// 	int		count;
+int	main(int argc, char **argv)
+{
+	int		fd;
+	char	*line;
+	int		count;
 
-// 	count = 0;
-// 	fd = open(argv[1], O_RDONLY);
-// 	if (fd == -1)
-// 	{
-// 		printf("Error opening file");
-// 		return (1);
-// 	}
-// 	while (count < atoi(argv[2]))
-// 	{
-// 		line = get_next_line(fd);
-// 		count++;
-// 		printf("[%d]:%s\n", count, line);
-// 		free(line);
-// 		line = NULL;
-// 	}
+	(void)argc;
+	count = 0;
+	fd = open(argv[1], O_RDONLY);
+	if (fd == -1)
+	{
+		printf("Error opening file");
+		return (1);
+	}
+	while (count < atoi(argv[2]))
+	{
+		line = get_next_line(fd);
+		count++;
+		printf("[%d]:%s\n", count, line);
+		free(line);
+		line = NULL;
+	}
 
-// 	close(fd);
-// 	return (0);
-// }
-
+	close(fd);
+	return (0);
+}
