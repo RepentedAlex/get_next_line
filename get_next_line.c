@@ -11,6 +11,9 @@
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+#include <stdio.h>
+#include <fcntl.h>
+#include <errno.h>
 
 char	*obtain_remaining(char *basin_buffer)
 {
@@ -83,17 +86,13 @@ static char	*read_from_file(char *basin_buffer, int fd)
 	if (!cup_buffer)
 		return (NULL);
 	bytes_read = 1;
-	while (bytes_read > 0)
+	while (!ft_strchr(basin_buffer, '\n') && bytes_read != 0)
 	{
 		bytes_read = read(fd, cup_buffer, BUFFER_SIZE);
 		if (bytes_read == -1)
 			return (free(cup_buffer), NULL);
-		if (bytes_read == 0)
-			return (free(cup_buffer), NULL);
-		cup_buffer[bytes_read] = 0;
+		cup_buffer[bytes_read] = '\0';
 		basin_buffer = append_buffer(basin_buffer, cup_buffer);
-		if (ft_strchr(basin_buffer, '\n'))
-			break ;
 	}
 	free(cup_buffer);
 	return (basin_buffer);
@@ -105,10 +104,9 @@ char	*get_next_line(int fd)
 	static char	*basin_buffer = NULL;
 	char		*line;
 
-	if (fd < 0 || read(fd, NULL, 0) < 0 || BUFFER_SIZE <= 0)
-		return (NULL);
-	if (!ft_strchr(basin_buffer, '\n'))
-		basin_buffer = read_from_file(basin_buffer, fd);
+	if (fd < 0 /*|| read(fd, NULL, 0) < 0 */|| BUFFER_SIZE <= 0)
+		return (0);
+	basin_buffer = read_from_file(basin_buffer, fd);
 	if (!basin_buffer)
 		return (free(basin_buffer), NULL);
 	line = extract_line(basin_buffer);
@@ -119,32 +117,47 @@ char	*get_next_line(int fd)
 	return (line);
 }
 
-#include <stdio.h>
-#include <fcntl.h>
-
-int	main(int argc, char **argv)
+int	main(void)
 {
-	int		fd;
 	char	*line;
-	int		count;
-
-	(void)argc;
-	count = 0;
-	fd = open(argv[1], O_RDONLY);
-	if (fd == -1)
+	int		i;
+	int		fd1;
+	int		fd2;
+	int		fd3;
+	fd1 = open("tests/test.txt", O_RDONLY);
+	if (fd1 == -1)
 	{
-		printf("Error opening file");
+		perror("Error opening file :");
 		return (1);
 	}
-	while (count < atoi(argv[2]))
+	fd2 = open("tests/test2.txt", O_RDONLY);
+	if (fd2 == -1)
 	{
-		line = get_next_line(fd);
-		count++;
-		printf("[%d]:%s\n", count, line);
-		free(line);
-		line = NULL;
+		perror("Error opening file :");
+		return (1);
 	}
-
-	close(fd);
+	fd3 = open("tests/test3.txt", O_RDONLY);
+	if (fd3 == -1)
+	{
+		perror("Error opening file :");
+		return (1);
+	}
+	i = 1;
+	while (i < 7)
+	{
+		line = get_next_line(fd1);
+		printf("line [%02d]: %s", i, line);
+		free(line);
+		line = get_next_line(fd2);
+		printf("line [%02d]: %s", i, line);
+		free(line);
+		line = get_next_line(fd3);
+		printf("line [%02d]: %s", i, line);
+		free(line);
+		i++;
+	}
+	close(fd1);
+	close(fd2);
+	close(fd3);
 	return (0);
 }
