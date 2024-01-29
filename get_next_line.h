@@ -6,7 +6,7 @@
 /*   By: apetitco <apetitco@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 15:10:45 by apetitco          #+#    #+#             */
-/*   Updated: 2024/01/23 17:59:12 by apetitco         ###   ########.fr       */
+/*   Updated: 2024/01/29 15:59:38 by apetitco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,17 @@
 
 # include <stdlib.h>
 # include <unistd.h>
+# include <stdbool.h>
 
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 3
 # endif
+
+# ifndef NB_BUFFER
+#  define NB_BUFFER 512
+# endif
+
+typedef struct s_buffer {char *buf; bool eof; int fd; bool used;} t_buffer;
 
 char	*append_buffer(char *basin_buffer, char *cup_buffer);
 char	*extract_line(char *basin_buffer);
