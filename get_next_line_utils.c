@@ -6,7 +6,7 @@
 /*   By: apetitco <apetitco@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 15:04:57 by apetitco          #+#    #+#             */
-/*   Updated: 2024/01/29 15:30:56 by apetitco         ###   ########.fr       */
+/*   Updated: 2024/02/01 20:50:11 by apetitco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ char	*ft_strchr(const char *s, int c)
 {
 	int	i;
 
-	if (!s)
+	if (!s || !c)
 		return (NULL);
 	i = 0;
 	while (s[i] != (unsigned char)c)
@@ -95,7 +95,12 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	int		j;
 
 	if (!s1)
-		return (ft_strdup(s2));
+	{
+		new = ft_strdup(s2);
+		if (!new)
+			return (NULL);
+		return (new);
+	}
 	new = malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2)+ 1));
 	if (!new)
 		return (NULL);
@@ -106,7 +111,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 		i++;
 	}
 	j = 0;
-	while (s2[j])
+	while (s2 && s2[j])
 	{
 		new[i + j] = s2[j];
 		j++;
