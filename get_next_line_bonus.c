@@ -1,21 +1,18 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: apetitco <apetitco@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/23 15:02:06 by apetitco          #+#    #+#             */
-/*   Updated: 2024/02/01 22:01:44 by apetitco         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 #include <stdio.h>
 #include <fcntl.h>
 #include <errno.h>
 
-//Stores the remaining of the `basin` if there is still something left after `extract_line()`.
+//strjoin + free and replace & buf->buf
+static char	*append_buffer(char *basin, char *cup)
+{
+	char	*tmp;
+
+	tmp = ft_strjoin(basin, cup);
+	free(basin);
+	return (tmp);
+}
+
 static char	*obtain_remaining(char *basin)
 {
 	int		i;
@@ -39,7 +36,6 @@ static char	*obtain_remaining(char *basin)
 	return (line);
 }
 
-//Extracts the line to display. `line` is either ending with a '\n' or the end of the file
 static char	*extract_line(char *basin)
 {
 	char	*line;
@@ -62,16 +58,6 @@ static char	*extract_line(char *basin)
 	return (line);
 }
 
-//strjoin + free and replace & buf->buf
-static char	*append_buffer(char *basin, char *cup)
-{
-	char	*tmp;
-
-	tmp = ft_strjoin(basin, cup);
-	free(basin);
-	return (tmp);
-}
-//This function reads into the file pointed by `fd` by storing each read in `cup` and then appending `cup` to `basin`. Returns `basin->buf`
 static char	*read_from_file(int fd, char *basin)
 {
 	char	*cup;
@@ -97,33 +83,48 @@ static char	*read_from_file(int fd, char *basin)
 	free(cup);
 	return (basin);
 }
-//FOR BONUS
 
-//Main function
 char	*get_next_line(int fd)
 {
-	static char	*basin;
+	static char	*basin[NB_BUFFER];
 	char		*line;
 
 	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
 		return (NULL);
-	basin = read_from_file(fd, basin);
-	if (!basin)
+	basin[fd] = read_from_file(fd, basin[fd]);
+	if (!basin[fd])
 		return (NULL);
-	line = extract_line(basin);
-	basin = obtain_remaining(basin);
+	line = extract_line(basin[fd]);
+	basin[fd] = obtain_remaining(basin[fd]);
 	return (line);
 }
+
 /*
 int	main(void)
 {
 	char	*line;
 	int		i;
 	int		fd1;
+    int     fd2;
+    int     fd3;
 
-	fd1 = open("example.txt", O_RDONLY);
+	fd1 = open("example1.txt", O_RDONLY);
 	// fd1 = 0;
 	if (fd1 == -1)
+	{
+		perror("Error opening file :");
+		return (1);
+	}
+    fd2 = open("example2.txt", O_RDONLY);
+	// fd1 = 0;
+	if (fd2 == -1)
+	{
+		perror("Error opening file :");
+		return (1);
+	}
+    fd3 = open("example3.txt", O_RDONLY);
+	// fd1 = 0;
+	if (fd3 == -1)
 	{
 		perror("Error opening file :");
 		return (1);
@@ -136,9 +137,21 @@ int	main(void)
 		if (line)
 			free(line);
 		line = NULL;
+        line = get_next_line(fd2);
+		printf("line [%02d]: %s\n", i, line);
+		if (line)
+			free(line);
+		line = NULL;
+        line = get_next_line(fd3);
+		printf("line [%02d]: %s\n", i, line);
+		if (line)
+			free(line);
+		line = NULL;
 		i++;
 	}
 	close(fd1);
+    close(fd2);
+    close(fd3);
 	return (0);
 }
 */
