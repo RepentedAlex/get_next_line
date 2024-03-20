@@ -6,7 +6,7 @@
 /*   By: apetitco <apetitco@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 16:47:52 by apetitco          #+#    #+#             */
-/*   Updated: 2024/03/20 16:48:25 by apetitco         ###   ########.fr       */
+/*   Updated: 2024/03/20 19:12:23 by apetitco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,15 +40,15 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	return (res);
 }
 
-char	*ft_strchr(const char *string, int searchedChar )
+char	*ft_strchr(const char *haystack, int needle)
 {
-	char	*str;
+	char	*tmp;
 
-	str = (char *)string;
-	while (*str != searchedChar && *str != 0)
-		str++;
-	if (*str == searchedChar)
-		return (str);
+	tmp = (char *)haystack;
+	while (*tmp != needle && *tmp != 0)
+		tmp++;
+	if (*tmp == needle)
+		return (tmp);
 	else
 		return (NULL);
 }
@@ -78,12 +78,12 @@ void	*ft_calloc(size_t nmemb, size_t size)
 	return (res);
 }
 
-size_t	ft_strlen(const char *theString)
+size_t	ft_strlen(const char *haystack)
 {
 	int	i;
 
 	i = 0;
-	while (theString[i])
+	while (haystack[i])
 		i++;
 	return (i);
 }
