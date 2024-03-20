@@ -1,3 +1,3 @@
-gnl-station-tester/
-gnlTester/
+./gnl-station-tester/*
+gnlTester/*
 a.out
