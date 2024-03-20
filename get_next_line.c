@@ -6,7 +6,7 @@
 /*   By: apetitco <apetitco@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 15:02:06 by apetitco          #+#    #+#             */
-/*   Updated: 2024/02/01 22:01:44 by apetitco         ###   ########.fr       */
+/*   Updated: 2024/03/20 16:45:54 by apetitco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 #include <fcntl.h>
 #include <errno.h>
 
-//Stores the remaining of the `basin` if there is still something left after `extract_line()`.
 static char	*obtain_remaining(char *basin)
 {
 	int		i;
@@ -39,7 +38,6 @@ static char	*obtain_remaining(char *basin)
 	return (line);
 }
 
-//Extracts the line to display. `line` is either ending with a '\n' or the end of the file
 static char	*extract_line(char *basin)
 {
 	char	*line;
@@ -62,7 +60,6 @@ static char	*extract_line(char *basin)
 	return (line);
 }
 
-//strjoin + free and replace & buf->buf
 static char	*append_buffer(char *basin, char *cup)
 {
 	char	*tmp;
@@ -71,7 +68,7 @@ static char	*append_buffer(char *basin, char *cup)
 	free(basin);
 	return (tmp);
 }
-//This function reads into the file pointed by `fd` by storing each read in `cup` and then appending `cup` to `basin`. Returns `basin->buf`
+
 static char	*read_from_file(int fd, char *basin)
 {
 	char	*cup;
@@ -97,9 +94,7 @@ static char	*read_from_file(int fd, char *basin)
 	free(cup);
 	return (basin);
 }
-//FOR BONUS
 
-//Main function
 char	*get_next_line(int fd)
 {
 	static char	*basin;

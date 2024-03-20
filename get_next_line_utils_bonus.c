@@ -1,3 +1,14 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line_utils_bonus.c                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: apetitco <apetitco@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/03/20 16:47:52 by apetitco          #+#    #+#             */
+/*   Updated: 2024/03/20 16:48:25 by apetitco         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "get_next_line_bonus.h"
 
@@ -69,7 +80,7 @@ void	*ft_calloc(size_t nmemb, size_t size)
 
 size_t	ft_strlen(const char *theString)
 {
-    int i;
+	int	i;
 
 	i = 0;
 	while (theString[i])
