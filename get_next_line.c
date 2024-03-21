@@ -6,7 +6,7 @@
 /*   By: apetitco <apetitco@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 15:02:06 by apetitco          #+#    #+#             */
-/*   Updated: 2024/03/20 17:25:01 by apetitco         ###   ########.fr       */
+/*   Updated: 2024/03/21 13:13:58 by apetitco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,31 +109,3 @@ char	*get_next_line(int fd)
 	basin = obtain_remaining(basin);
 	return (line);
 }
-/*
-int	main(void)
-{
-	char	*line;
-	int		i;
-	int		fd1;
-
-	fd1 = open("example.txt", O_RDONLY);
-	// fd1 = 0;
-	if (fd1 == -1)
-	{
-		perror("Error opening file :");
-		return (1);
-	}
-	i = 0;
-	while (i < 4)
-	{
-		line = get_next_line(fd1);
-		printf("line [%02d]: %s\n", i, line);
-		if (line)
-			free(line);
-		line = NULL;
-		i++;
-	}
-	close(fd1);
-	return (0);
-}
-*/

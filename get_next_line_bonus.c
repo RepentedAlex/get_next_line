@@ -6,7 +6,7 @@
 /*   By: apetitco <apetitco@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 16:46:36 by apetitco          #+#    #+#             */
-/*   Updated: 2024/03/20 16:46:39 by apetitco         ###   ########.fr       */
+/*   Updated: 2024/03/21 13:13:21 by apetitco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 #include <fcntl.h>
 #include <errno.h>
 
-//strjoin + free and replace & buf->buf
 static char	*append_buffer(char *basin, char *cup)
 {
 	char	*tmp;
@@ -110,60 +109,3 @@ char	*get_next_line(int fd)
 	basin[fd] = obtain_remaining(basin[fd]);
 	return (line);
 }
-
-/*
-int	main(void)
-{
-	char	*line;
-	int		i;
-	int		fd1;
-    int     fd2;
-    int     fd3;
-
-	fd1 = open("example1.txt", O_RDONLY);
-	// fd1 = 0;
-	if (fd1 == -1)
-	{
-		perror("Error opening file :");
-		return (1);
-	}
-    fd2 = open("example2.txt", O_RDONLY);
-	// fd1 = 0;
-	if (fd2 == -1)
-	{
-		perror("Error opening file :");
-		return (1);
-	}
-    fd3 = open("example3.txt", O_RDONLY);
-	// fd1 = 0;
-	if (fd3 == -1)
-	{
-		perror("Error opening file :");
-		return (1);
-	}
-	i = 0;
-	while (i < 4)
-	{
-		line = get_next_line(fd1);
-		printf("line [%02d]: %s\n", i, line);
-		if (line)
-			free(line);
-		line = NULL;
-        line = get_next_line(fd2);
-		printf("line [%02d]: %s\n", i, line);
-		if (line)
-			free(line);
-		line = NULL;
-        line = get_next_line(fd3);
-		printf("line [%02d]: %s\n", i, line);
-		if (line)
-			free(line);
-		line = NULL;
-		i++;
-	}
-	close(fd1);
-    close(fd2);
-    close(fd3);
-	return (0);
-}
-*/
